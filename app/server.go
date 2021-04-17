@@ -1,6 +1,7 @@
 package app
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 )
@@ -17,4 +18,13 @@ func HTTPServer(port string) {
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	log.Println("- receive request")
+	message := HTTPMessgae{"OK", 200}
+	json, err := json.Marshal(message)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(json)
 }
